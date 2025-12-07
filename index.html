@@ -1,0 +1,699 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Шишка Казино — Pro Edition 🍁✨</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='62' font-size='60' text-anchor='middle'>🌰</text></svg>">
+<style>
+  :root{
+    --bg-0:#05060a;
+    --bg-1:#071020;
+    --glass: rgba(255,255,255,0.03);
+    --accent:#ffb86b;
+    --accent-2:#ff7f50;
+    --muted:#9aa4b2;
+    --coin:#d4a017;
+    --card:#0f1b2b;
+    --success:#8be78b;
+    --danger:#ff6b6b;
+    --glass-2: rgba(255,255,255,0.02);
+    --shadow: 0 14px 50px rgba(2,6,23,0.7);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(800px 400px at 10% 10%, rgba(255,184,102,0.03), transparent),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    color:#e6eef6;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-y:auto;
+    padding-bottom:48px;
+  }
+
+  /* Top navigation */
+  header{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;padding:18px 28px;
+    backdrop-filter: blur(6px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    border-bottom:1px solid rgba(255,255,255,0.03);
+    gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    background: conic-gradient(from 200deg at 50% 50%, #ffb86b,#ff8f6b);font-weight:900;font-size:30px;transform:rotate(-6deg);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.6), inset 0 -8px 20px rgba(255,255,255,0.06);
+  }
+  h1{margin:0;font-size:18px}
+  p.lead{margin:0;color:var(--muted);font-size:13px}
+
+  .controls-top{display:flex;align-items:center;gap:12px}
+  .balance{
+    display:flex;align-items:center;gap:12px;background:var(--glass);padding:10px 14px;border-radius:12px;
+    box-shadow: var(--shadow);
+  }
+  .coin{
+    width:48px;height:48px;border-radius:12px;background:linear-gradient(180deg,var(--coin),#ffda64);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#2b1b00;font-size:18px;
+  }
+  .btn{background:linear-gradient(180deg,#1f8cff,#0056d6);padding:10px 14px;border-radius:12px;border:none;color:white;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,86,214,0.14)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);box-shadow:none}
+  .small{padding:8px 10px;font-size:13px}
+
+  main{max-width:1500px;margin:22px auto;padding:0 20px;}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns: 1fr 380px;gap:26px;align-items:start}
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.03);
+    box-shadow: var(--shadow);
+  }
+
+  /* Hero big */
+  .hero{min-height:520px;padding:26px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden}
+  .hero .meta{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .big-title{font-size:28px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+
+  /* Tabs as pills */
+  .game-tabs{display:flex;gap:10px;flex-wrap:wrap}
+  .tab{
+    padding:10px 14px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer;font-weight:700;font-size:14px;
+  }
+  .tab.active{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:inset 0 6px 20px rgba(255,255,255,0.02)}
+
+  /* Game area */
+  .game-area{margin-top:12px;display:grid;grid-template-columns: 1fr 360px;gap:18px;align-items:start}
+  .game-canvas{background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);border-radius:14px;padding:18px;min-height:360px;position:relative;overflow:hidden}
+
+  /* Slot styles */
+  .slot-board{display:flex;gap:18px;align-items:center;justify-content:center;padding:12px}
+  .reels{display:flex;gap:12px;background:var(--glass-2);padding:14px;border-radius:14px}
+  .reel{width:120px;height:120px;border-radius:14px;background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));display:flex;align-items:center;justify-content:center;font-size:48px;box-shadow:inset 0 -8px 24px rgba(0,0,0,0.3)}
+  .reel.spin{animation:spinReel .18s linear infinite}
+  @keyframes spinReel{ from { transform: translateY(-4px) } to { transform: translateY(4px) } }
+
+  .controls{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .range{width:260px}
+
+  /* Rocket */
+  .rocket-stage{height:240px;display:flex;align-items:flex-end;justify-content:center;position:relative}
+  .rocket{
+    width:90px;height:150px;border-radius:22px;background:linear-gradient(180deg,#fff,#e6f0ff);display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:900;
+    transform:translateY(0);transition:transform 0.12s linear, box-shadow .12s;
+    box-shadow: 0 12px 30px rgba(2,6,23,0.5);
+  }
+  .flame{position:absolute;bottom:28px;height:40px;width:40px;border-radius:50%;filter:blur(8px);opacity:0.95}
+
+  /* Miner */
+  .mine-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:10px}
+  .mine-tile{background:#08131a;border-radius:10px;height:74px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(255,255,255,0.02);font-weight:700;color:var(--muted)}
+  .mine-tile.revealed{background:linear-gradient(180deg,#112634,#0d1f2a);color:#e6eef6}
+
+  /* Ladder */
+  .ladder{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .rung{width:100%;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,0.02);font-weight:700}
+  .rung.locked{opacity:0.45;cursor:default}
+
+  /* Sidebar */
+  .sidebar .game-card{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+  .muted{color:var(--muted);font-size:13px}
+  .leaderboard{display:flex;flex-direction:column;gap:8px}
+  .leader{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02)}
+
+  /* Footer small */
+  footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+  /* Toast */
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:36px;background:#06111a;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(0,0,0,0.6);color:var(--muted);z-index:1000}
+
+  /* Responsive */
+  @media(max-width:1100px){
+    .game-area{grid-template-columns:1fr}
+    .layout{grid-template-columns:1fr}
+    .game-canvas{min-height:420px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo" aria-hidden="true">Ш</div>
+    <div>
+      <h1>Шишка Казино — Pro Edition</h1>
+      <p class="lead">Улучшенная версия: сохранение, лидерборд, плавные анимации и расширенные микрогемы.</p>
+    </div>
+  </div>
+
+  <div class="controls-top">
+    <div class="balance" title="Шишка-коины">
+      <div class="coin" id="coinEmoji">🌰</div>
+      <div style="line-height:1">
+        <div style="font-size:12px;color:var(--muted)">Баланс</div>
+        <div id="balance" style="font-weight:900;font-size:18px">0</div>
+        <div style="font-size:11px;color:var(--muted)">шишка‑коинов</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn ghost small" id="resetBtn">Сбросить локально</button>
+      <button class="btn small" id="faucetBtn">+250</button>
+      <button class="btn small" id="settingsBtn">⚙ Настройки</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <section class="panel hero">
+      <div class="meta">
+        <div>
+          <div class="big-title">Игровая зона — все мини‑игры в одном месте</div>
+          <div class="sub">Продвинутый фан‑прототип, нельзя выводить деньги. Баланс сохраняется в браузере.</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--muted)">Текущая ставка</div>
+          <div style="font-weight:900;font-size:22px" id="currentBet">10</div>
+          <div style="font-size:12px;color:var(--muted)">шишка‑коинов</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px" class="game-tabs" role="tablist" aria-label="Игры">
+        <button class="tab active" data-game="slots" role="tab" aria-selected="true">Слоты 🎰</button>
+        <button class="tab" data-game="rocket" role="tab">Ракетка 🚀</button>
+        <button class="tab" data-game="miner" role="tab">Минёр ⛏️</button>
+        <button class="tab" data-game="ladder" role="tab">Лесенка 🪜</button>
+        <button class="tab" data-game="jackpot" role="tab">Джекпот 💥</button>
+      </div>
+
+      <div class="game-area" aria-live="polite">
+        <div class="game-canvas panel" id="gameCanvas" tabindex="0">
+          <!-- SLOTS -->
+          <div id="slots" class="game-panel" data-game-panel>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="muted">Улучшенные слоты: честная генерация, регистрируемый ивент выигрыша</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input id="betInput" class="range" type="range" min="1" max="1000" value="10" aria-label="Ставка">
+                <button class="btn small" id="maxBetBtn">Макс</button>
+              </div>
+            </div>
+            <div class="slot-board" style="margin-top:18px">
+              <div class="reels" aria-hidden="true">
+                <div class="reel" id="r1">🍁</div>
+                <div class="reel" id="r2">🌰</div>
+                <div class="reel" id="r3">🔔</div>
+              </div>
+              <div class="controls" style="align-items:flex-start">
+                <button class="btn" id="spinBtn">Крутить</button>
+                <div style="font-size:13px;color:var(--muted)">Результат</div>
+                <div id="lastResult" style="font-weight:900;font-size:16px">—</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+              <div class="muted">Автоматически сохраняю историю 10 игр</div>
+              <button class="btn ghost small" id="historyBtn">История</button>
+            </div>
+          </div>
+
+          <!-- ROCKET -->
+          <div id="rocket" style="display:none" class="game-panel" data-game-panel>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="muted">Ракета: мультипликатор растёт, риск/награда. Кнопка "Забрать" в любой момент.</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input id="betInputRocket" class="range" type="range" min="1" max="1000" value="10" aria-label="Ставка ракеты">
+                <button class="btn small" id="maxBetRocket">Макс</button>
+              </div>
+            </div>
+            <div class="rocket-stage" style="margin-top:18px" aria-hidden="true">
+              <div style="position:absolute;left:12px;bottom:12px;color:var(--muted)">x<span id="rocketMult">1.00</span></div>
+              <div id="rocketFlame" class="flame" style="left:50%;transform:translateX(-50%);background:radial-gradient(circle,#ff7f50,#ffb86b);opacity:0"></div>
+              <div class="rocket" id="rocketEl">🚀</div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;margin-top:12px">
+              <button class="btn" id="launchBtn">Запустить</button>
+              <button class="btn ghost small" id="cashoutBtn">Забрать x<span id="cashoutVal">1.00</span></button>
+              <div class="muted">Space — запуск / C — закасить</div>
+            </div>
+          </div>
+
+          <!-- MINER -->
+          <div id="miner" style="display:none" class="game-panel" data-game-panel>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="muted">Минёр: 24 плитки, случайные призы, прогресс сохраняется в сессии.</div>
+              <button class="btn ghost small" id="resetMine">Обновить шахту</button>
+            </div>
+            <div class="mine-grid" id="mineGrid" style="margin-top:12px"></div>
+          </div>
+
+          <!-- LADDER -->
+          <div id="ladder" style="display:none" class="game-panel" data-game-panel>
+            <div class="muted">Лесенка: ступени с возрастающими множителями и фиксированными шансами.</div>
+            <div class="ladder" id="ladderEl" style="margin-top:12px"></div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button class="btn" id="startLadder">Начать лесенку</button>
+              <button class="btn ghost small" id="collectLadder">Забрать</button>
+            </div>
+          </div>
+
+          <!-- JACKPOT -->
+          <div id="jackpot" style="display:none" class="game-panel" data-game-panel>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="muted">Общий джекпот: вклад от ставок (условный), шанс выиграть большой приз в случайный момент.</div>
+              <div style="font-weight:900;font-size:18px" id="jackpotPool">5000</div>
+            </div>
+            <div style="margin-top:18px">
+              <button class="btn" id="contributeBtn">Взять участие ставкой</button>
+              <div style="margin-top:10px;color:var(--muted)">Джекпот растёт от каждой ставки. Это имитация — только для фана.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <aside class="panel sidebar">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-weight:900">Панель</div>
+            <div class="muted">Быстрые действия</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+            <div class="game-card" data-game-select="slots">
+              <div style="font-size:22px">🎰</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Слоты</div>
+                <div class="muted">Быстрый спин</div>
+              </div>
+            </div>
+            <div class="game-card" data-game-select="rocket">
+              <div style="font-size:22px">🚀</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Ракета</div>
+                <div class="muted">Управляемый риск</div>
+              </div>
+            </div>
+            <div class="game-card" data-game-select="miner">
+              <div style="font-size:22px">⛏️</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Минёр</div>
+                <div class="muted">Копай плитки</div>
+              </div>
+            </div>
+            <div class="game-card" data-game-select="ladder">
+              <div style="font-size:22px">🪜</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Лесенка</div>
+                <div class="muted">Пошаговый риск</div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:12px 0">
+
+          <div style="margin-bottom:12px">
+            <div style="font-weight:900">О шишка-койнах</div>
+            <div class="muted">Валюта фан‑проекта, сохраняется в браузере.</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn small" id="tip10">+10</button>
+              <button class="btn small" id="tip50">+50</button>
+              <button class="btn small" id="tip250">+250</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:12px">
+            <div style="font-weight:900">Лидерборд (локально)</div>
+            <div class="leaderboard" id="leaderboard"></div>
+            <button class="btn ghost small" id="clearLeaders">Очистить</button>
+          </div>
+
+          <div style="margin-bottom:12px">
+            <div style="font-weight:900">Настройки</div>
+            <div class="muted">Тема, звук, подсказки</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn small" id="themeBtn">Тема</button>
+              <button class="btn small" id="soundBtn">Звук: Вкл</button>
+            </div>
+          </div>
+
+          <footer>
+            <div class="muted">Шутливый продукт — не настоящее казино.</div>
+            <div style="font-size:12px;margin-top:8px;color:var(--muted)">Версия Pro — улучшенная визуально и функционально.</div>
+          </footer>
+        </aside>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<div id="toast" class="toast" style="display:none" role="status" aria-live="polite"></div>
+
+<script>
+/* ====== State & Persistence ====== */
+const STORAGE_KEY = 'shishka_pro_v2';
+let state = {
+  balance: 2500,
+  history: [],
+  leaders: [],
+  settings: { sound: true, theme: 'dark' },
+  jackpot: 5000
+};
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  }catch(e){ console.warn('load error',e) }
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+loadState();
+
+/* ======= Utilities ======= */
+function $(id){ return document.getElementById(id) }
+function toast(msg, t=2200){
+  const el = $('toast'); el.textContent = msg; el.style.display='block';
+  setTimeout(()=> el.style.display='none', t);
+  if (state.settings.sound) beep();
+}
+function updateUI(){
+  $('balance').textContent = Math.floor(state.balance);
+  $('currentBet').textContent = currentBet;
+  $('jackpotPool').textContent = Math.floor(state.jackpot);
+  renderLeaderboard();
+  saveState();
+}
+
+/* ===== Sounds (WebAudio) ===== */
+let audioCtx = null;
+function ensureAudio(){ if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+function tone(freq, dur=0.08, vol=0.02){
+  if (!state.settings.sound) return;
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  g.gain.value=vol;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+function beep(){ tone(880,0.03,0.03) }
+
+/* ====== Initial UI wiring ====== */
+let currentBet = 10;
+$('betInput')?.addEventListener('input', e=>{ currentBet = Number(e.target.value); $('currentBet').textContent = currentBet; });
+$('betInputRocket')?.addEventListener('input', e=>{ /* separate control */ });
+$('maxBetBtn')?.addEventListener('click', ()=> { currentBet = Math.min(1000, Math.floor(state.balance)); $('betInput').value=currentBet; $('currentBet').textContent=currentBet; });
+$('maxBetRocket')?.addEventListener('click', ()=> { const v=Math.min(1000, Math.floor(state.balance)); $('betInputRocket').value=v; toast('Ракета: макс ставка установлена'); });
+
+$('faucetBtn').addEventListener('click', ()=>{ state.balance += 250; updateUI(); toast('+250 шишка-коинов') });
+$('tip10').addEventListener('click', ()=>{ state.balance+=10; updateUI(); });
+$('tip50').addEventListener('click', ()=>{ state.balance+=50; updateUI(); });
+$('tip250').addEventListener('click', ()=>{ state.balance+=250; updateUI(); });
+
+$('resetBtn').addEventListener('click', ()=>{ if (confirm('Сбросить локальные данные (баланс, лидеры, история)?')){ localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+
+/* ===== Tabs & navigation ===== */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  showGame(t.dataset.game);
+}));
+document.querySelectorAll('[data-game-select]').forEach(c => c.addEventListener('click', ()=>{
+  const g = c.dataset.gameSelect;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelector('.tab[data-game="'+g+'"]').classList.add('active');
+  showGame(g);
+}));
+
+function showGame(name){
+  document.querySelectorAll('[data-game-panel]').forEach(p=>p.style.display='none');
+  const el = document.getElementById(name);
+  if (el) el.style.display='block';
+}
+
+/* ===== Slots (improved fairness & history) ===== */
+const symbols = ['🍁','🌰','🔔','💎','⭐','🍄','🍇','🍊'];
+const payoutMap = {'🍁':2,'🌰':3,'🔔':4,'💎':12,'⭐':6,'🍄':5,'🍇':8,'🍊':7};
+
+function weightedSpin(){
+  // create weighted array for small house-edge
+  const weights = {'🍁':30,'🌰':20,'🔔':12,'💎':5,'⭐':10,'🍄':8,'🍇':7,'🍊':8};
+  const pool = [];
+  for (const s of symbols) for(let i=0;i<weights[s];i++) pool.push(s);
+  return [randFrom(pool), randFrom(pool), randFrom(pool)];
+}
+function randFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+$('spinBtn').addEventListener('click', ()=>{
+  const bet = Math.max(1, Math.floor(currentBet));
+  if (bet > state.balance){ toast('Недостаточно шишка-коинов'); return; }
+  // deduct and animate
+  state.balance -= bet; updateUI();
+  const r1 = $('r1'), r2=$('r2'), r3=$('r3');
+  r1.classList.add('spin'); r2.classList.add('spin'); r3.classList.add('spin');
+  let ticks=16;
+  const spinInterval = setInterval(()=>{
+    r1.textContent = randFrom(symbols);
+    r2.textContent = randFrom(symbols);
+    r3.textContent = randFrom(symbols);
+    ticks--;
+    if (ticks<=0){
+      clearInterval(spinInterval);
+      r1.classList.remove('spin'); r2.classList.remove('spin'); r3.classList.remove('spin');
+      const [s1,s2,s3] = weightedSpin();
+      r1.textContent=s1; r2.textContent=s2; r3.textContent=s3;
+      let win=0;
+      if (s1===s2 && s2===s3) win = Math.floor(bet * payoutMap[s1]);
+      else if (s1===s2 || s2===s3 || s1===s3) win = Math.floor(bet * 1.15);
+      if (win>0){ state.balance += win; toast('Вы выиграли +'+win); tone(1200,0.08,0.03); } else { toast('Проигрыш'); tone(200,0.06,0.02); }
+      // save history
+      state.history.unshift({time:Date.now(), game:'slots', bet, outcome:[s1,s2,s3], win});
+      if (state.history.length>40) state.history.pop();
+      // small jackpot contribution
+      state.jackpot += Math.floor(bet*0.02);
+      updateUI();
+      checkJackpot();
+    }
+  },70);
+});
+
+/* ===== Rocket improved ===== */
+let rocketRunning=false, rocketInterval=null, rocketMult=1.0, rocketCrashAt=0;
+
+function resetRocket(){ rocketRunning=false; clearInterval(rocketInterval); rocketMult=1.0; rocketCrashAt = 1 + Math.random()*12; $('rocketMult').textContent = rocketMult.toFixed(2); $('rocketEl').style.transform='translateY(0)'; $('rocketFlame').style.opacity=0; $('cashoutVal').textContent = rocketMult.toFixed(2); }
+resetRocket();
+
+function startRocket(){
+  const bet = Math.floor(document.getElementById('betInputRocket')?.value || currentBet);
+  if (bet > state.balance){ toast('Недостаточно шишка-коинов'); return; }
+  if (rocketRunning){ toast('Ракета в полёте'); return; }
+  state.balance -= bet; updateUI();
+  rocketRunning=true; rocketCrashAt = 1 + Math.random()*12; rocketMult=1.0;
+  $('rocketFlame').style.opacity=1;
+  rocketInterval = setInterval(()=>{
+    rocketMult *= 1 + (0.02 + Math.random()*0.08);
+    if (rocketMult>100) rocketMult = 100;
+    $('rocketMult').textContent = rocketMult.toFixed(2);
+    $('cashoutVal').textContent = rocketMult.toFixed(2);
+    const y = Math.min(220, (rocketMult-1)*12);
+    $('rocketEl').style.transform = `translateY(-${y}px)`;
+    if (rocketMult >= rocketCrashAt){
+      clearInterval(rocketInterval); rocketRunning=false;
+      $('rocketFlame').style.opacity=0;
+      $('rocketEl').textContent='💥';
+      tone(60,0.18,0.06);
+      toast('Ракета взорвалась при x'+rocketMult.toFixed(2));
+      setTimeout(()=>{ $('rocketEl').textContent='🚀'; resetRocket(); },900);
+      // record loss
+      state.history.unshift({time:Date.now(), game:'rocket', bet, outcome:'crash', mult:rocketMult, win:0});
+      updateUI();
+    }
+  },110);
+}
+
+function cashoutRocket(){
+  if (!rocketRunning){ toast('Надо сначала запустить'); return; }
+  const bet = Math.floor(document.getElementById('betInputRocket')?.value || currentBet);
+  const win = Math.floor(bet * rocketMult);
+  state.balance += win;
+  toast('Закасилено +'+win+' (x'+rocketMult.toFixed(2)+')');
+  tone(1000,0.06,0.04);
+  state.history.unshift({time:Date.now(), game:'rocket', bet, outcome:'cashout', mult:rocketMult, win});
+  rocketRunning=false; clearInterval(rocketInterval);
+  $('rocketEl').textContent='🎉';
+  setTimeout(()=>{ $('rocketEl').textContent='🚀'; resetRocket(); },700);
+  // jackpot chance
+  state.jackpot += Math.floor(bet*0.01);
+  updateUI(); checkJackpot();
+}
+
+$('launchBtn').addEventListener('click', startRocket);
+$('cashoutBtn').addEventListener('click', cashoutRocket);
+
+/* Keyboard shortcuts */
+document.addEventListener('keydown', (e)=>{
+  if (e.code==='Space'){ e.preventDefault(); const active = document.querySelector('.tab.active').dataset.game; if (active==='rocket') startRocket(); else if (active==='slots') $('spinBtn').click(); }
+  if (e.code==='KeyC'){ cashoutRocket(); }
+});
+
+/* ===== Miner (improved) ===== */
+let mineState = [];
+function initMine(){
+  const grid = $('mineGrid'); grid.innerHTML=''; mineState=[];
+  const tiles = 24; const prizeCount = 6;
+  const prizePositions = [];
+  while(prizePositions.length < prizeCount){
+    const idx = Math.floor(Math.random()*tiles);
+    if (!prizePositions.includes(idx)) prizePositions.push(idx);
+  }
+  for(let i=0;i<tiles;i++){
+    const tile = document.createElement('div');
+    tile.className='mine-tile';
+    tile.dataset.index=i;
+    tile.addEventListener('click', ()=> revealTile(tile, prizePositions.includes(i)));
+    grid.appendChild(tile);
+    mineState.push({revealed:false, prize: prizePositions.includes(i)? Math.floor(Math.random()*150)+20 : 0});
+  }
+}
+function revealTile(tile, hasPrize){
+  const idx=Number(tile.dataset.index);
+  if (mineState[idx].revealed) return;
+  mineState[idx].revealed=true; tile.classList.add('revealed');
+  if (mineState[idx].prize>0){
+    tile.textContent='🌰+'+mineState[idx].prize;
+    state.balance += mineState[idx].prize;
+    toast('Нашли шишки: +'+mineState[idx].prize);
+    tone(1200,0.06,0.04);
+  } else { tile.textContent='—'; toast('Пусто'); tone(200,0.04,0.02); }
+  state.history.unshift({time:Date.now(), game:'miner', index:idx, win:mineState[idx].prize});
+  if (state.history.length>60) state.history.pop();
+  updateUI();
+}
+$('resetMine').addEventListener('click', initMine);
+
+/* ===== Ladder improved ===== */
+let ladderState = {step:0, active:false, accumulated:0, bet:0};
+function buildLadder(){
+  const el = $('ladderEl'); el.innerHTML='';
+  for(let i=1;i<=8;i++){
+    const rung = document.createElement('div');
+    rung.className='rung locked'; rung.dataset.step=i;
+    rung.textContent = `Ступень ${i} — x${(0.6*i).toFixed(1)}`;
+    el.appendChild(rung);
+  }
+}
+function startLadder(){
+  if (ladderState.active) { toast('Лесенка уже идёт'); return; }
+  ladderState.bet = currentBet;
+  if (ladderState.bet > state.balance){ toast('Недостаточно шишка-коинов'); return; }
+  state.balance -= ladderState.bet; updateUI();
+  ladderState = {step:0, active:true, accumulated:0, bet: ladderState.bet};
+  buildLadder();
+  toast('Старт! Выбирайте ступени');
+  revealNextRung();
+}
+function revealNextRung(){
+  ladderState.step++;
+  const el = document.querySelector('.rung[data-step="'+ladderState.step+'"]');
+  if (!el) return;
+  el.classList.remove('locked'); el.style.cursor='pointer';
+  const win = Math.floor(ladderState.bet * (0.6*ladderState.step + Math.random()*0.4));
+  el.onclick = function(){
+    const failChance = 0.1 + ladderState.step*0.09;
+    el.classList.add('locked'); el.style.cursor='default';
+    const success = Math.random() > failChance;
+    if (success){
+      ladderState.accumulated += win; el.textContent='Успех +'+win; toast('Получено +'+win);
+      state.history.unshift({time:Date.now(), game:'ladder', step:ladderState.step, win});
+      if (ladderState.step < 8){
+        setTimeout(()=> revealNextRung(), 450);
+      } else {
+        state.balance += ladderState.accumulated; toast('Лесенка пройдена! +'+ladderState.accumulated);
+        ladderState.active=false; updateUI();
+      }
+    } else {
+      el.textContent='Провал 💥'; toast('Провал — всё потеряно');
+      ladderState.active=false; ladderState.accumulated=0; updateUI();
+      state.history.unshift({time:Date.now(), game:'ladder', step:ladderState.step, win:0});
+    }
+  }
+}
+$('startLadder').addEventListener('click', startLadder);
+$('collectLadder').addEventListener('click', ()=> {
+  if (!ladderState.active) { toast('Нечего собирать'); return; }
+  state.balance += ladderState.accumulated; toast('Забрали +'+ladderState.accumulated);
+  ladderState.active=false; ladderState.accumulated=0; updateUI();
+});
+
+/* ===== Jackpot mechanics ===== */
+$('contributeBtn').addEventListener('click', ()=> {
+  const bet = Math.min( Math.floor(currentBet), Math.floor(state.balance) );
+  if (bet<=0){ toast('Установите ставку'); return; }
+  state.balance -= bet; state.jackpot += Math.floor(bet*0.15);
+  toast('Вы внесли '+bet+' в джекпот');
+  state.history.unshift({time:Date.now(), game:'jackpot', bet});
+  updateUI();
+  checkJackpot();
+});
+function checkJackpot(){
+  // imitated random chance to award jackpot proportional to pool size
+  if (Math.random() < Math.min(0.0006, state.jackpot/5000000)){
+    // award
+    const prize = Math.floor(state.jackpot * (0.5 + Math.random()*0.5));
+    state.balance += prize; state.jackpot = 1000;
+    toast('ДЖЕКПОТ! +'+prize);
+    state.leaders.push({name: 'Игрок', amount: prize, time: Date.now()});
+    updateUI();
+  }
+}
+
+/* ===== Leaderboard rendering ===== */
+function renderLeaderboard(){
+  const el = $('leaderboard'); el.innerHTML='';
+  const leaders = (state.leaders || []).slice(-8).reverse();
+  if (leaders.length===0){ el.innerHTML='<div class="muted">Пока пусто — выиграйте джекпот!</div>'; return; }
+  leaders.forEach(l => {
+    const row = document.createElement('div'); row.className='leader';
+    row.innerHTML = `<div>${l.name}</div><div style="font-weight:900">${l.amount}</div>`;
+    el.appendChild(row);
+  });
+}
+$('clearLeaders').addEventListener('click', ()=>{ state.leaders=[]; updateUI(); });
+
+/* ===== History modal (simple) ===== */
+$('historyBtn').addEventListener('click', ()=> {
+  const items = state.history.slice(0,20).map(h=>{
+    const t = new Date(h.time).toLocaleString();
+    return `${t} — ${h.game} — ставка:${h.bet||'-'} — выигрыш:${h.win||0}`;
+  }).join('\n');
+  alert('История (последние):\n\n' + (items || 'Пусто'));
+});
+
+/* ===== Settings ===== */
+$('settingsBtn').addEventListener('click', ()=> {
+  const s = confirm('Включить/выключить звук? OK — переключить');
+  state.settings.sound = !state.settings.sound;
+  $('soundBtn').textContent = 'Звук: ' + (state.settings.sound? 'Вкл':'Выкл');
+  updateUI();
+});
+$('soundBtn').addEventListener('click', ()=>{ state.settings.sound = !state.settings.sound; $('soundBtn').textContent = 'Звук: ' + (state.settings.sound? 'Вкл':'Выкл'); updateUI(); });
+$('themeBtn').addEventListener('click', ()=>{ alert('Темы можно добавить — пока только тёмная по умолчанию.'); });
+
+/* ===== Init ===== */
+initMine(); buildLadder(); updateUI(); showGame('slots');
+
+/* Accessibility focus */
+document.getElementById('gameCanvas').addEventListener('keydown', (e)=> {
+  if (e.key==='Enter'){ const active = document.querySelector('.tab.active').dataset.game; if (active==='slots') $('spinBtn').click(); }
+});
+
+</script>
+</body>
+</html>
